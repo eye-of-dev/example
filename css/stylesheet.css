@@ -1,0 +1,28 @@
+/* 
+    Created on : 04.06.2014, 17:46:50
+    Author     : Asus
+*/
+
+body{
+    margin: 0;
+    padding: 0;
+}
+
+ul{
+    margin-left: 0;
+    padding-left: 0;
+}
+
+li{
+    list-style-type: none;
+}
+
+#container{
+
+}
+
+#header{
+    width: 100%;
+    border-bottom: #CCC dotted 1px;
+    margin: 0 auto;
+}
