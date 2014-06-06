@@ -26,3 +26,12 @@ li{
     border-bottom: #CCC dotted 1px;
     margin: 0 auto;
 }
+
+.image_list{
+    padding: 20px;
+}
+
+.image_list img{
+    margin: 2px;
+    border: #000 dotted 1px;
+}

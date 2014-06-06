@@ -9,13 +9,20 @@ if (file_exists('config.php')) {
 }  
 
 // Startup
-require_once(DIR_ENGINE . 'autoload.php');
-require_once(DIR_ENGINE . 'controller.php');
+require_once('startup.php');
+
+// Registry
+$registry = new Registry();
+
+// Config
+$image = new Image();
+$registry->set('image', $image);
 
 $header = new Header();
 $header->index();
 
+$body= new Body($registry);
+$body->index();
 
-
-$header = new Footer();
-$header->index();
+$footer = new Footer();
+$footer->index();
