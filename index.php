@@ -21,7 +21,7 @@ $registry->set('image', $image);
 $header = new Header();
 $header->index();
 
-$body= new Body($registry);
+$body = new Body($registry);
 $body->index();
 
 $footer = new Footer();

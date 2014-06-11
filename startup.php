@@ -8,3 +8,5 @@ require_once(DIR_ENGINE . 'registry.php');
 // From libs folder
 require_once(DIR_LIBS . 'image.php');
 
+// always must be down
+require_once(DIR_ENGINE . 'engine.php');

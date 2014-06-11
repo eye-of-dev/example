@@ -33,22 +33,21 @@ $valid_mime = array('image/gif', 'image/jpeg', 'image/pjpeg', 'image/png', 'imag
 if (file_exists(dirname(__DIR__) . '/tmp/' . $file))
 {
     $handle = @fopen(dirname(__DIR__) . '/tmp/' . $file, "r");
-    
+       
     if ($handle) {
         while (($link = fgets($handle, 4096)) !== false) {
             
-            $ext = trim(substr(strrchr($link, '.'), 1));
-            
             $link = trim($link);
-            $image_info = @getimagesize($link);
-            
+
+            $ext = substr(strrchr($link, '.'), 1);
+                        
             $data = explode('/', $link);
             $file_name = rawurldecode(end($data));
             
             // Проверка на расширение файла
             // Проверка на mime
             // Проверка на существование файла
-            if (in_array($ext, $valid_types) && in_array($image_info['mime'], $valid_mime) && ! file_exists(dirname(__DIR__) . '/images/' . $file_name)) 
+            if (in_array($ext, $valid_types) && ! file_exists(dirname(__DIR__) . '/images/' . $file_name)) 
             {
                 $image = @file_get_contents($link);
 
@@ -57,8 +56,6 @@ if (file_exists(dirname(__DIR__) . '/tmp/' . $file))
                     file_put_contents(dirname(__DIR__) . '/images/' . $file_name, $image);
                 }
             }
-
-
             
         }
         if (!feof($handle)) {
@@ -66,8 +63,5 @@ if (file_exists(dirname(__DIR__) . '/tmp/' . $file))
         }
         fclose($handle);
     }
-
 }
-
-header("Location: /");
-die();
+exit;

@@ -13,6 +13,8 @@ define('DIR_TMP', $root_dir . '/tmp/');
 define('SITE_ROOT', $_SERVER['SERVER_NAME']);
 define('IMG_W', '750');
 define('IMG_H', '723');
+define('width', '300');
+define('height', '220');
 define('IMG_BACKGROUND', FALSE);
 define('IMG_WATERMARK', TRUE);
 define('IMG_WATERMARK_SRC', $root_dir . '/watermark.png');
