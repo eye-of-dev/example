@@ -29,56 +29,58 @@ class Image
             {
                 mkdir(DIR_IMAGES . $images_dir, 0777);
             }
-            
-            $xpos = 0;
-            $ypos = 0;
-            $scale = 1;
-            
-            $scale_w = $width / $this->info['width'];
-            $scale_h = $height / $this->info['height'];
-            
-            if ($default == 'w')
-            {
-                $scale = $scale_w;
-            }
-            elseif ($default == 'h')
-            {
-                $scale = $scale_h;
-            }
-            else
-            {
-                $scale = min($scale_w, $scale_h);
-            }
-            
-            if ($scale == 1 && $scale_h == $scale_w && $this->info['mime'] != 'image/png')
-            {
-                return;
-            }
-            
-            $new_width = ( int ) ($this->info['width'] * $scale);
-            $new_height = ( int ) ($this->info['height'] * $scale);
-            $xpos = ( int ) (($width - $new_width) / 2);
-            $ypos = ( int ) (($height - $new_height) / 2);
-            
+
             $image_old = $this->image;
+            
             $this->image = imagecreatetruecolor($width, $height);
             
-            if (isset($this->info['mime']) && $this->info['mime'] == 'image/png')
-            {
-                imagealphablending($this->image, false);
-                imagesavealpha($this->image, true);
-                $background = imagecolorallocatealpha($this->image, 255, 255, 255, 127);
-                imagecolortransparent($this->image, $background);
-            }
-            else
-            {
-                $background = imagecolorallocate($this->image, 255, 255, 255);
-            }
-
             // Если true то идображение будет пропорционально уменьшино, пустые места заполнятся 
             // белым фоном.
             if (IMG_BACKGROUND)
             {
+                
+                $xpos = 0;
+                $ypos = 0;
+                $scale = 1;
+
+                $scale_w = $width / $this->info['width'];
+                $scale_h = $height / $this->info['height'];
+
+                if ($default == 'w')
+                {
+                    $scale = $scale_w;
+                }
+                elseif ($default == 'h')
+                {
+                    $scale = $scale_h;
+                }
+                else
+                {
+                    $scale = min($scale_w, $scale_h);
+                }
+
+                if ($scale == 1 && $scale_h == $scale_w && $this->info['mime'] != 'image/png')
+                {
+                    return;
+                }
+
+                $new_width = ( int ) ($this->info['width'] * $scale);
+                $new_height = ( int ) ($this->info['height'] * $scale);
+                $xpos = ( int ) (($width - $new_width) / 2);
+                $ypos = ( int ) (($height - $new_height) / 2);
+
+                if (isset($this->info['mime']) && $this->info['mime'] == 'image/png')
+                {
+                    imagealphablending($this->image, false);
+                    imagesavealpha($this->image, true);
+                    $background = imagecolorallocatealpha($this->image, 255, 255, 255, 127);
+                    imagecolortransparent($this->image, $background);
+                }
+                else
+                {
+                    $background = imagecolorallocate($this->image, 255, 255, 255);
+                }
+                
                 imagefilledrectangle($this->image, 0, 0, $width, $height, $background);
 
                 imagecopyresampled($this->image, $image_old, $xpos, $ypos, 0, 0, $new_width, $new_height, $this->info['width'], $this->info['height']);
@@ -113,7 +115,7 @@ class Image
         $data = explode('/', $img_file);
         $image_name = rawurldecode(end($data));
         
-        if ( ! file_exists(DIR_IMAGES . $images_dir . 'w_' . $image_name))
+        if (file_exists(DIR_IMAGES . $images_dir . 'w_' . $image_name))
         {
             return '/images/' . $images_dir . 'w_' . $image_name;
         }
@@ -189,7 +191,53 @@ class Image
         }
     }
 
-        /**
+    /**
+     * Функция получения изображений
+     * @return array
+     */
+    public function get_images()
+    {
+        
+        $images = array();
+
+        $data = array();
+        
+        $files = scandir(DIR_IMAGES);
+
+        // Источник изображений
+        $images_dir = (IMG_BACKGROUND) ? IMG_W . '-' . IMG_H . '_b/' : IMG_W . '-' . IMG_H . '/';
+
+        foreach ($files as $key => $file)
+        {
+            if ($file == '.' || $file == '..' || is_dir(DIR_IMAGES . $file))
+                continue;
+
+            if (!file_exists(DIR_IMAGES . $images_dir . IMG_W . '_' . IMG_H . '_' . $file))
+            {
+                $images[] = $this->resize(DIR_IMAGES . $file, IMG_W, IMG_H, $file, $images_dir);
+            }
+            else
+            {
+                $images[] = $this->get_image($images_dir, IMG_W, IMG_H, $file);
+            }
+        }
+
+        if (IMG_WATERMARK)
+        {
+            foreach ($images as $item)
+            {
+                $data[] = $this->watermark($item, IMG_W, IMG_H, $images_dir);
+            }
+        }
+        else
+        {
+            $data = $images;
+        }
+        
+        return $data;
+    }
+    
+    /**
      * Проверка на существование файла
      * @param string $file
      * @return boolean
