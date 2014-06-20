@@ -7,6 +7,7 @@ define('DIR_CLASSES', $root_dir . '/classes/');
 define('DIR_ENGINE', $root_dir . '/engine/');
 define('DIR_IMAGES', $root_dir . '/images/');
 define('DIR_LIBS', $root_dir . '/libs/');
+define('DIR_LOGS', $root_dir . '/logs/');
 define('DIR_VIEW', $root_dir . '/view/');
 define('DIR_TMP', $root_dir . '/tmp/');
 
